@@ -1,0 +1,187 @@
+/* Global reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html, body {
+    background: linear-gradient(135deg, #000 0%, #111 100%);
+    color: #0f0;
+    font-family: 'Press Start 2P', cursive, sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+    min-height: 100vh;
+  }
+  
+  /* Navbar */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #111;
+    padding: 10px 20px;
+    border-bottom: 2px solid #0f0;
+  }
+  
+  .nav-brand {
+    font-size: 1rem;
+  }
+  
+  .navbar a {
+    color: #0f0;
+    text-decoration: none;
+    margin-left: 15px;
+  }
+  
+  .navbar a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Container */
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Flash messages */
+  .flashes {
+    list-style: none;
+    background: #200;
+    border: 2px solid #f00;
+    color: #f88;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+  
+  /* Headings */
+  h1, h2, h3 {
+    margin-bottom: 10px;
+  }
+  
+  /* Intro section (index page) */
+  .intro-section {
+    background: #111;
+    border: 2px solid #0f0;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  /* Info box (balance, portfolio) */
+  .info-box {
+    background: #111;
+    border: 2px solid #0f0;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+  
+  /* Price box for AA */
+  .price-box {
+    background: #111;
+    border: 2px solid #0f0;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px #0f0;
+    text-align: center;
+  }
+  
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    background: #111;
+    color: #0f0;
+  }
+  
+  table thead {
+    background: #222;
+  }
+  
+  table th, table td {
+    border: 1px solid #0f0;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  /* Open positions quantity colors */
+  .long {
+    color: #0f0;
+  }
+  .short {
+    color: #f00;
+  }
+  
+  /* Trade form styling */
+  .trade-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  /* Quantity Picker Styling */
+  .quantity-picker {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .quantity-picker label {
+    font-size: 12px;
+    margin-bottom: 5px;
+  }
+  
+  .qty-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .qty-button {
+    background: #000;
+    color: #0f0;
+    border: 2px solid #0f0;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .qty-button.active,
+  .qty-button:hover {
+    background: #0f0;
+    color: #000;
+  }
+  
+  /* Action buttons (Buy/Sell) styling */
+  .action-buttons {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .action-buttons button {
+    background: #000;
+    color: #0f0;
+    border: 2px solid #0f0;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    text-transform: uppercase;
+    transition: background 0.2s;
+  }
+  
+  .action-buttons button:hover {
+    background: #0f0;
+    color: #000;
+  }
+  /* Message styling */
+  .message {
+    background: #020;
+    border: 2px solid #0f0;
+    color: #0f0;
+    padding: 10px;
+    margin-bottom: 20px;
+    display: inline-block;
+    box-shadow: 0 0 10px #0f0;
+  }
+  

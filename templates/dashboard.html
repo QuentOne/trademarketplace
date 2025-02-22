@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Dashboard</h2>
+
+<div class="info-box">
+  <p><strong>Your virtual balance:</strong> ${{ "%.2f"|format(user.balance) }}</p>
+  <p><strong>Your total portfolio value:</strong> ${{ "%.2f"|format(portfolio_value) }}</p>
+</div>
+
+{% if message %}
+    <p class="message">{{ message }}</p>
+{% endif %}
+
+<div id="priceBox" class="price-box">
+  <h3>AA Current Price: ${{ "%.2f"|format(current_price) }}</h3>
+</div>
+
+<h3>Open Positions</h3>
+<table class="positions-table" id="openPositionsTable">
+    <thead>
+        <tr>
+            <th>Ticker</th>
+            <th>Net Quantity</th>
+            <th>Avg. Cost</th>
+            <th>Current Price</th>
+            <th>Unrealized PnL</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for pos in open_positions %}
+        <tr>
+            <td>{{ pos.ticker }}</td>
+            <td class="{% if pos.net_qty > 0 %}long{% else %}short{% endif %}">{{ pos.net_qty }}</td>
+            <td>$ {{ "%.2f"|format(pos.avg_cost) }}</td>
+            <td>$ {{ "%.2f"|format(pos.current_price) }}</td>
+            <td>$ {{ "%.2f"|format(pos.unrealized_pnl) }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h3>Trade AA</h3>
+<form method="POST" class="trade-form">
+  <div class="quantity-picker">
+    <label for="quantityInput">Quantity:</label>
+    <div class="qty-buttons">
+      <button type="button" class="qty-button" data-qty="1">1</button>
+      <button type="button" class="qty-button" data-qty="5">5</button>
+      <button type="button" class="qty-button" data-qty="10">10</button>
+      <button type="button" class="qty-button" data-qty="25">25</button>
+      <button type="button" class="qty-button" data-qty="50">50</button>
+    </div>
+    <!-- Hidden input to store the selected quantity -->
+    <input type="hidden" name="quantity" id="quantityInput" value="1">
+  </div>
+
+  <div class="action-buttons">
+    <button type="submit" name="action" value="buy">Buy</button>
+    <button type="submit" name="action" value="sell">Sell</button>
+  </div>
+</form>
+
+<!-- Script to handle quantity button clicks -->
+<script>
+  // When a quantity button is clicked, update the hidden input and highlight the selected button
+  document.querySelectorAll('.qty-button').forEach(btn => {
+    btn.addEventListener('click', function() {
+      // Remove active class from all
+      document.querySelectorAll('.qty-button').forEach(b => b.classList.remove('active'));
+      // Add active class to the clicked button
+      this.classList.add('active');
+      // Update the hidden input
+      document.getElementById('quantityInput').value = this.getAttribute('data-qty');
+    });
+  });
+  // Set the first button as active by default
+  document.querySelector('.qty-button').classList.add('active');
+</script>
+
+
+<h3>Your Trade History</h3>
+<table class="trade-history-table">
+    <thead>
+        <tr>
+            <th>Time</th>
+            <th>Ticker</th>
+            <th>Type</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for trade in trades %}
+    <tr>
+        <td>{{ trade.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+        <td>{{ trade.ticker }}</td>
+        <td>{{ trade.trade_type }}</td>
+        <td>{{ trade.quantity }}</td>
+        <td>$ {{ "%.2f"|format(trade.price) }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<!-- JavaScript to poll the price & open positions every second -->
+<script>
+    // Update ticker price every 1 second
+    setInterval(function() {
+        fetch('{{ url_for("ticker_prices_endpoint") }}')
+            .then(response => response.json())
+            .then(data => {
+                if (data.prices.length > 0) {
+                    const newPrice = parseFloat(data.prices[0].price).toFixed(2);
+                    const priceBox = document.getElementById('priceBox');
+                    priceBox.innerHTML = `<h3>AA Current Price: $${newPrice}</h3>`;
+                }
+            });
+    }, 1000);
+
+    // Update open positions every 1 second
+    setInterval(function() {
+        fetch('{{ url_for("open_positions_endpoint") }}')
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.querySelector("#openPositionsTable tbody");
+                tbody.innerHTML = "";
+                data.positions.forEach(pos => {
+                    const qtyClass = pos.net_qty > 0 ? "long" : "short";
+                    let row = `<tr>
+                        <td>${pos.ticker}</td>
+                        <td class="${qtyClass}">${pos.net_qty}</td>
+                        <td>$${parseFloat(pos.avg_cost).toFixed(2)}</td>
+                        <td>$${parseFloat(pos.current_price).toFixed(2)}</td>
+                        <td>$${parseFloat(pos.unrealized_pnl).toFixed(2)}</td>
+                    </tr>`;
+                    tbody.innerHTML += row;
+                });
+            });
+    }, 1000);
+</script>
+{% endblock %}
